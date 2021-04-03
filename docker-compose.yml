@@ -1,0 +1,36 @@
+version: '3.1'
+
+services:
+  php74:
+    build:
+      context: .
+      dockerfile: Dockerfile.74
+    ports:
+      - 80:80
+    volumes:
+      - ./php74:/var/www/html/
+  php56:
+    build:
+      context: .
+      dockerfile: Dockerfile.56
+    ports:
+      - 88:80
+    volumes:
+      - ./php56:/var/www/html/
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    platform: linux/x86_64
+    restart: always
+    volumes:
+      - ./volumes/mysql/mysql-data:/var/lib/mysql
+      - ./configs/my.cnf:/etc/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: example #example of password
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
